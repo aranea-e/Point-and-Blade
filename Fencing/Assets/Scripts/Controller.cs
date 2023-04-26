@@ -7,7 +7,7 @@ public class Controller : MonoBehaviour
     [SerializeField] Controller other;
     
     Rigidbody2D rb;
-    Transform trans;
+    public Transform trans;
     BoxCollider2D playerCollider;
 
     [SerializeField] KeyCode l;
@@ -19,9 +19,9 @@ public class Controller : MonoBehaviour
     bool jump;
     bool grounded;
     public bool actionable;
-    public bool lag;
+    public float lag;
     public float hitstun;
-    RaycastHit hit;
+    public float attackTime;
     [SerializeField] float moveMod;
     [SerializeField] float jumpMod;
     
@@ -36,22 +36,34 @@ public class Controller : MonoBehaviour
         moveright = Input.GetKey(r);
         jump = Input.GetKeyDown(j) && IsGrounded();
 
-        if (hitstun > 0.0f || lag) {
+        if (other.trans.position.x > trans.position.x) {
+            trans.localScale = new Vector3(1f, 1f, 1f);
+        } else {
+            trans.localScale = new Vector3(-1f, 1f, 1f);
+        }
+
+        if (hitstun > 0.0f || lag > 0.0f) {
             actionable = false;
         } 
 
         if (actionable) {
-            Vector3 final  = Vector3.zero;
+            Vector3 final = Vector3.zero;
             final.y = rb.velocity.y;
             if (moveleft) { final.x -= moveMod; }
             if (moveright) { final.x += moveMod; }
+            if (!(moveleft || moveright)) { final.x = rb.velocity.x; }
             if (jump) { final.y += jumpMod; }
             rb.velocity = final;
-        } else if (lag == false) {
+        } else if (lag <= 0) {
             hitstun -= Time.deltaTime;
             if (hitstun <= 0.0f) {
                 actionable = true;
             }
+        } else {
+            if (attackTime > 0) {
+                attackTime -= Time.deltaTime;
+            }
+            lag -= Time.deltaTime;
         }
     }
 

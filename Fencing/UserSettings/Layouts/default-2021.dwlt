@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1206
     height: 614.6667
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 117
+  controlID: 17
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 88
+  controlID: 54
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 89
+  controlID: 95
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -317,21 +317,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Sprites
+    - Assets/Materials
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Sprites
+  - Assets/Materials
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\pengu\OneDrive\Desktop\Coding\Projects\Fencing\Fencing
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 665a0000
-    m_LastClickedID: 23142
+    m_SelectedIDs: 625a0000
+    m_LastClickedID: 23138
     m_ExpandedIDs: 00000000585a000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -387,7 +387,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -488,9 +488,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: a6e1ffff
       m_LastClickedID: 0
-      m_ExpandedIDs: 3afbffffb0590000085a0000
+      m_ExpandedIDs: 3afbffffa0590000b0590000ce590000d2590000f4590000085a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -739,9 +739,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.6955329, y: 0.8698295, z: 5.1575}
+    m_Target: {x: -1.1422778, y: -2.3870468, z: 2.152011}
     speed: 2
-    m_Value: {x: 1.6955329, y: 0.8698295, z: 5.1575}
+    m_Value: {x: -1.1422778, y: -2.3870468, z: 2.152011}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -788,13 +788,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.05843815, y: -0.03144111, z: 0.001841543, w: 0.9977988}
+    m_Target: {x: 0.4036457, y: -0.0041170786, z: 0.0018165711, w: 0.91490984}
     speed: 2
-    m_Value: {x: 0.058437876, y: -0.031440966, z: 0.0018415344, w: 0.99779415}
+    m_Value: {x: 0.40364367, y: -0.004117058, z: 0.001816562, w: 0.91490525}
   m_Size:
-    m_Target: 4.7243986
+    m_Target: 5.391323
     speed: 2
-    m_Value: 4.7243986
+    m_Value: 5.391323
   m_Ortho:
     m_Target: 0
     speed: 2

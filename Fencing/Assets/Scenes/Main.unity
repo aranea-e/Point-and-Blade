@@ -278,7 +278,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342273404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 0.95, y: 1, z: 0.55}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -667,6 +667,7 @@ GameObject:
   - component: {fileID: 799690737}
   - component: {fileID: 799690744}
   - component: {fileID: 799690743}
+  - component: {fileID: 799690745}
   m_Layer: 9
   m_Name: P2
   m_TagString: Untagged
@@ -687,6 +688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   other: {fileID: 2142100712}
+  trans: {fileID: 0}
   l: 276
   r: 275
   j: 273
@@ -760,6 +762,29 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.875, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &799690745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799690736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53d75fef3e7de3d4080245bc53f94582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  torso: {fileID: 798762269}
+  head: {fileID: 1739301528}
+  blade: {fileID: 970195397}
+  sprites:
+  - {fileID: 21300000, guid: 74953827cc2ada34b933b0ae4077d1df, type: 3}
+  - {fileID: 21300000, guid: c74d2d60d6a487b4f9646b679098fa0b, type: 3}
+  - {fileID: 21300000, guid: 1b5dd1ed4b339dc47b69868dd321ef1f, type: 3}
+  - {fileID: 21300000, guid: 195f2d231acdc014b8bc339d30c4e7e7, type: 3}
+  - {fileID: 21300000, guid: 4bc8cb7ff1252e746abd7568cf3c43eb, type: 3}
+  - {fileID: 21300000, guid: c0409c814e5ec9b439e4ca12607ccf37, type: 3}
+  control: {fileID: 799690737}
 --- !u!1 &912253746
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,7 +1145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566865199}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
   m_LocalScale: {x: 0.14999999, y: 100, z: 0.03}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1709,6 +1734,7 @@ GameObject:
   - component: {fileID: 2142100714}
   - component: {fileID: 2142100713}
   - component: {fileID: 2142100715}
+  - component: {fileID: 2142100716}
   m_Layer: 8
   m_Name: P1
   m_TagString: Untagged
@@ -1747,6 +1773,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   other: {fileID: 799690737}
+  trans: {fileID: 0}
   l: 97
   r: 100
   j: 119
@@ -1854,3 +1881,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2142100716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142100706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53d75fef3e7de3d4080245bc53f94582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  torso: {fileID: 568776715}
+  head: {fileID: 1872530462}
+  blade: {fileID: 912253748}
+  sprites:
+  - {fileID: 21300000, guid: 7c48d17525281734f9811eeea6153540, type: 3}
+  - {fileID: 21300000, guid: 02e036c50fc1b6f4589f7bd4d8300883, type: 3}
+  - {fileID: 21300000, guid: 21d499708c7af284ca5a1249452bc08c, type: 3}
+  - {fileID: 21300000, guid: 3e410bee07578c74dacddb08d5a476de, type: 3}
+  - {fileID: 21300000, guid: 4bc8cb7ff1252e746abd7568cf3c43eb, type: 3}
+  - {fileID: 21300000, guid: c0409c814e5ec9b439e4ca12607ccf37, type: 3}
+  control: {fileID: 2142100712}
