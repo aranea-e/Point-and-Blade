@@ -8,32 +8,42 @@ public class Controller : MonoBehaviour
     
     Rigidbody2D rb;
     public Transform trans;
+    public Animator anim;
+    [SerializeField] BoxCollider2D bladeCollider;
     [SerializeField] BoxCollider2D playerCollider;
     [SerializeField] BoxCollider2D foot;
+    [SerializeField] BoxCollider2D hitbox;
 
     [SerializeField] KeyCode l;
     [SerializeField] KeyCode r;
     [SerializeField] KeyCode j;
+    [SerializeField] KeyCode d;
+    [SerializeField] KeyCode a;
+    [SerializeField] KeyCode b;
     [SerializeField] PhysicsMaterial2D[] materials;
 
-    bool moveleft;
-    bool moveright;
+    bool moveLeft;
+    bool moveRight;
+    bool inputDown;
     bool jump;
+    bool inputAttack;
+    bool inputBlock;
     bool footstool;
-    bool slip;      
+    bool slip; 
+    bool hit;     
     float fscd;
     float spcd;
+    float tripcd;
     public bool actionable;
-    public float lag;
     public float hitstun;
-    public float attackTime;
-    public float startupTime;
     [SerializeField] float moveMod;
     [SerializeField] float jumpMod;
     [SerializeField] LayerMask fslm;
     [SerializeField] LayerMask splm;
+    [SerializeField] LayerMask hurt;
     [SerializeField] Attack[] attackList;
     static Attack[] Attacks;
+    public Attack currentAttack;
     
     void Awake() {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -42,11 +52,32 @@ public class Controller : MonoBehaviour
     }
 
     void Update() {
-        moveleft = Input.GetKey(l);
-        moveright = Input.GetKey(r);
+        moveLeft = Input.GetKey(l);
+        moveRight = Input.GetKey(r);
+        inputDown = Input.GetKey(d);
         jump = Input.GetKeyDown(j) && IsGrounded();
+        inputAttack = Input.GetKeyDown(a);
+        inputBlock = Input.GetKey(b);
         footstool = Input.GetKeyDown(j) && foot.IsTouchingLayers(fslm);
-        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0 && spcd <= 0f;
+        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
+
+        if (hit) {
+            bladeCollider.enabled = false;
+        }
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {
+            hit = false;
+        }
+
+        if (hitbox.IsTouchingLayers(hurt) && !other.hit) {
+            other.currentAttack.hit(this);
+            other.hit = true;
+            actionable = false;
+        }
+
+        if (tripcd > 0f) {
+            tripcd -= Time.deltaTime;
+        }
 
         if (other.trans.position.x > trans.position.x) {
             trans.localScale = new Vector3(1f, 1f, 1f);
@@ -54,9 +85,41 @@ public class Controller : MonoBehaviour
             trans.localScale = new Vector3(-1f, 1f, 1f);
         }
 
-        if (hitstun > 0.0f || lag > 0.0f) {
+        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) || inputBlock) {
             actionable = false;
         } 
+
+        if (actionable && inputAttack) {
+            if (IsGrounded()) {
+                if (!(moveLeft ^ moveRight)) {
+                    if (inputDown) {
+                        if (tripcd > 0)
+                        {
+                            Attacks[5].attack(this);
+                            tripcd = .5f;
+                        } else {
+                            Attacks[4].attack(this);
+                            tripcd = 2.0f;
+                        }
+                    } else {
+                        Attacks[0].attack(this);
+                    }
+                }
+                
+                if ((moveRight && trans.localScale.x == 1) || (moveLeft && trans.localScale.x == -1)) {
+                    Attacks[1].attack(this);
+                    rb.AddForce(new Vector3(trans.localScale.x * 250, 0, 0));
+                }
+                if ((moveRight && trans.localScale.x == -1) || (moveLeft && trans.localScale.x == 1))
+                {
+                    Attacks[2].attack(this);
+                }
+            } else {
+                Attacks[3].attack(this);
+            }
+            
+            actionable = false;
+        }
 
         if (actionable && !slip) {
             rb.sharedMaterial = materials[0];
@@ -64,21 +127,28 @@ public class Controller : MonoBehaviour
 
             Vector3 final = Vector3.zero;
             final.y = rb.velocity.y;
-            if (moveleft) { final.x -= moveMod; }
-            if (moveright) { final.x += moveMod; }
-            if (jump) { final.y += jumpMod; }
+            if (IsGrounded() || footstool) {
+                if (moveLeft) { final.x -= moveMod; }
+                if (moveRight) { final.x += moveMod; }
+                if (jump) { final.y += jumpMod; }
+            } else {
+                if (!footstool) {
+                    final.x = rb.velocity.x;
+                }
+            }
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 
+                spcd = 0f;
                 final.y += jumpMod / 2f; 
                 other.applyHitstun(2f); 
-                final.x = 0;
-                rb.velocity = Vector3.down;
             }
             rb.velocity = final;
         } else if (slip) {
             Vector3 final = Vector3.zero;
-            applyHitstun(2f);
-            spcd = .1f;
+            if (spcd <= 0f) {
+                applyHitstun(2f);
+            }
+            spcd = 3f;
             final.y += jumpMod / 2f;
             if (other.trans.position.x > trans.position.x) {
                 final.x = -moveMod / 2;
@@ -86,7 +156,7 @@ public class Controller : MonoBehaviour
                 final.x = moveMod / 2;
             }
             rb.velocity = final;
-        } else if (lag <= 0) {
+        } else {
             rb.sharedMaterial = materials[1];
             playerCollider.sharedMaterial = materials[1];
 
@@ -94,14 +164,6 @@ public class Controller : MonoBehaviour
             if (hitstun <= 0.0f) {
                 actionable = true;
             }
-        } else {
-            if (startupTime > 0) {
-                startupTime -= Time.deltaTime;
-            }
-            if (attackTime > 0) {
-                attackTime -= Time.deltaTime;
-            }
-            lag -= Time.deltaTime;
         }
 
         if (fscd > 0) {
@@ -122,6 +184,10 @@ public class Controller : MonoBehaviour
     }
 
     public void applyKnockback(Vector2 knockback) {
-        rb.velocity += knockback;
+        rb.velocity = new Vector3(knockback.x * other.trans.localScale.x, knockback.y);
+    }
+
+    public bool bladeActive() {
+        return bladeCollider.enabled;
     }
 }

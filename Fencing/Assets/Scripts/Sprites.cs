@@ -22,7 +22,7 @@ public class Sprites : MonoBehaviour
             head.sprite = sprites[2];
         }
 
-        if (control.attackTime > 0f && control.startupTime <= 0f) {
+        if (control.bladeActive()) {
             blade.sprite = sprites[5];
         } else {
             blade.sprite = sprites[4];

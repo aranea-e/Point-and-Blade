@@ -6,10 +6,8 @@ using UnityEngine;
 public class Attack
 {
     [SerializeField] string name;
-    
-    [SerializeField] float startup;
-    [SerializeField] float active;
-    [SerializeField] float lag;
+
+    [SerializeField] string trigger;
 
     [SerializeField] float damage;
     [SerializeField] Vector2 knockback;
@@ -21,8 +19,7 @@ public class Attack
     }
 
     public void attack(Controller attacker) {
-        attacker.lag = lag;
-        attacker.attackTime = active;
-        attacker.startupTime = startup;
+        attacker.anim.SetTrigger(trigger);
+        attacker.currentAttack = this;
     }
 }
