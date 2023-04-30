@@ -10,6 +10,7 @@ public class Controller : MonoBehaviour
     public int playerNumber;
     Controls controls;
     [SerializeField] Starter starter;
+    public AudioManager audioManager;
     
     Rigidbody2D rb;
     public Transform trans;
@@ -59,6 +60,7 @@ public class Controller : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         trans = gameObject.GetComponent<Transform>();
         controls = FindObjectOfType<Controls>();
+        audioManager = FindObjectOfType<AudioManager>();
         if (attackList != null) { Attacks = attackList; }
 
         l = controls.controls[0 + playerNumber * 6];
@@ -199,17 +201,19 @@ public class Controller : MonoBehaviour
             
             if (moveLeft) { final.x -= moveMod; }
             if (moveRight) { final.x += moveMod; }
-            if (jump) { final.y += jumpMod; }
+            if (jump) { final.y += jumpMod; audioManager.play("Jump"); }
             
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 
                 spcd = 0f;
                 final.y += jumpMod / 2f; 
                 other.applyHitstun(2f); 
+                audioManager.play("Footstool");
             }
             rb.velocity = final;
         } else if (slip) {
             Vector3 final = Vector3.zero;
+            audioManager.play("Slip");
             if (spcd <= 0f) {
                 applyHitstun(2f);
             }

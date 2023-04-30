@@ -18,8 +18,26 @@ public class Attack
         reciever.applyKnockback(knockback);
         if (reciever.playerNumber == 0)
         {
+            if (reciever.ui.getVal(0) - damage <= 0) {
+                reciever.audioManager.play("Kill");
+            } else {
+                if (name == "Block") {
+                    reciever.audioManager.play("Block");
+                } else {
+                    reciever.audioManager.play("Hit");
+                }
+            }
             reciever.ui.addVal(0, -damage);
         } else {
+            if (reciever.ui.getVal(1) - damage <= 0) {
+                reciever.audioManager.play("Kill");
+            } else {
+                if (name == "Block") {
+                    reciever.audioManager.play("Block");
+                } else {
+                    reciever.audioManager.play("Hit");
+                }
+            }
             reciever.ui.addVal(1, -damage);
         }
         reciever.actionable = false;
