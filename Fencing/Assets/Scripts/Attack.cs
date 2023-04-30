@@ -16,6 +16,7 @@ public class Attack
     public void hit(Controller reciever) {
         reciever.applyHitstun(stun);
         reciever.applyKnockback(knockback);
+        reciever.spcd = 3.0f;
         if (reciever.playerNumber == 0)
         {
             if (reciever.ui.getVal(0) - damage <= 0) {

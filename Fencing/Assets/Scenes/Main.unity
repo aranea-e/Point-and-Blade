@@ -433,7 +433,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.5}
+  m_Offset: {x: 0, y: 0.375}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -444,7 +444,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.25}
+  m_Size: {x: 0.5, y: 0.0625}
   m_EdgeRadius: 0
 --- !u!1 &272389874
 GameObject:
@@ -1096,6 +1096,7 @@ MonoBehaviour:
   ui: {fileID: 1508498908}
   playerNumber: 1
   starter: {fileID: 173364025}
+  audioManager: {fileID: 0}
   trans: {fileID: 799690742}
   anim: {fileID: 799690746}
   bladeCollider: {fileID: 1127743830}
@@ -1115,6 +1116,7 @@ MonoBehaviour:
   - {fileID: 6200000, guid: e5f34ca796b8d4f479aa375352d87f4f, type: 2}
   block: 0
   hit: 0
+  spcd: 0
   tripcd: 0
   actionable: 0
   starting: 0
@@ -2946,7 +2948,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.5}
+  m_Offset: {x: 0, y: 0.375}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2957,7 +2959,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.25}
+  m_Size: {x: 0.5, y: 0.0625}
   m_EdgeRadius: 0
 --- !u!1 &1666945685
 GameObject:
@@ -3961,6 +3963,7 @@ MonoBehaviour:
   ui: {fileID: 1508498908}
   playerNumber: 0
   starter: {fileID: 173364025}
+  audioManager: {fileID: 0}
   trans: {fileID: 2142100711}
   anim: {fileID: 2142100717}
   bladeCollider: {fileID: 610851322}
@@ -3980,6 +3983,7 @@ MonoBehaviour:
   - {fileID: 6200000, guid: e5f34ca796b8d4f479aa375352d87f4f, type: 2}
   block: 0
   hit: 0
+  spcd: 0
   tripcd: 0
   actionable: 0
   starting: 0
@@ -4009,8 +4013,8 @@ MonoBehaviour:
   - name: Retreating Swipe
     trigger: Retreat
     damage: 4
-    knockback: {x: 5, y: 1}
-    stun: 1
+    knockback: {x: 7, y: 0}
+    stun: 0.33
   - name: Jump Attack
     trigger: Jump
     damage: 5

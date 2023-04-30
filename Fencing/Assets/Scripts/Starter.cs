@@ -59,6 +59,7 @@ public class Starter : MonoBehaviour
                 P2.trans.position = new Vector3(3, 0.9400001f, 0);
             }
         }
+        cam.Update();
         trans.position = new Vector3(cam.trans.position.x, 3, 0);
     }
 }

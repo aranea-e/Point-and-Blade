@@ -9,7 +9,7 @@ public class CameraScript : MonoBehaviour
     [SerializeField] float zoomMod;
     public Transform trans;
 
-    void Update()
+    public void Update()
     {
         float distance = Vector3.Distance(P1.trans.position, P2.trans.position);
         float average = (P1.trans.position.x + P2.trans.position.x) / 2.0f;

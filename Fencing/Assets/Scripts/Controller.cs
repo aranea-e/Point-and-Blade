@@ -42,7 +42,7 @@ public class Controller : MonoBehaviour
     bool slip; 
     [SerializeField] bool hit;     
     float fscd;
-    float spcd;
+    public float spcd;
     public float tripcd;
     public bool actionable;
     public bool starting;
@@ -241,7 +241,7 @@ public class Controller : MonoBehaviour
             fscd -= Time.deltaTime;
         }
         if (spcd > 0) {
-            if (IsGrounded()) {
+            if (IsGrounded() && hitstun <= 0) {
                 spcd = 0;
             }
             spcd -= Time.deltaTime;
