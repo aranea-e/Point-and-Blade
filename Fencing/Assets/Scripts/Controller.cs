@@ -5,6 +5,8 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     [SerializeField] Controller other;
+    public UI ui;
+    public int playerNumber;
     
     Rigidbody2D rb;
     public Transform trans;
@@ -27,10 +29,12 @@ public class Controller : MonoBehaviour
     bool inputDown;
     bool jump;
     bool inputAttack;
+    bool buffered;
     bool inputBlock;
+    public bool block;
     bool footstool;
     bool slip; 
-    bool hit;     
+    [SerializeField] bool hit;     
     float fscd;
     float spcd;
     float tripcd;
@@ -56,7 +60,10 @@ public class Controller : MonoBehaviour
         moveRight = Input.GetKey(r);
         inputDown = Input.GetKey(d);
         jump = Input.GetKeyDown(j) && IsGrounded();
-        inputAttack = Input.GetKeyDown(a);
+        inputAttack = Input.GetKeyDown(a) || (Input.GetKey(a) && buffered);
+        if (!Input.GetKey(a) || inputAttack) {
+            buffered = false;
+        }
         inputBlock = Input.GetKey(b);
         footstool = Input.GetKeyDown(j) && foot.IsTouchingLayers(fslm);
         slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
@@ -69,10 +76,21 @@ public class Controller : MonoBehaviour
             hit = false;
         }
 
-        if (hitbox.IsTouchingLayers(hurt) && !other.hit) {
+        if (hitbox.IsTouchingLayers(hurt) && !other.hit && !other.block 
+                && !(block && other.currentAttack.name != "Trip Attack" && other.currentAttack.name != "Weak Trip Attack")) {
             other.currentAttack.hit(this);
             other.hit = true;
             actionable = false;
+        }
+
+        if (block && bladeCollider.IsTouchingLayers(hurt)) {
+            ui.addVal(2 + playerNumber, -33);
+            if (ui.getVal(2 + playerNumber) <= 0) {
+                ui.setVal(2 + playerNumber, -25);
+            }
+            ui.addVal(4 + playerNumber, other.currentAttack.damage * 3);
+            currentAttack = Attacks[6];
+            currentAttack.hit(other);
         }
 
         if (tripcd > 0f) {
@@ -85,9 +103,35 @@ public class Controller : MonoBehaviour
             trans.localScale = new Vector3(-1f, 1f, 1f);
         }
 
-        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) || inputBlock) {
+        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))) {
             actionable = false;
+            if (inputAttack) {
+                buffered = true;
+            }
         } 
+        
+        if (ui.getVal(4 + playerNumber) == 100 && inputBlock && hitstun <= 0.0f) {
+            ui.setVal(4 + playerNumber, 0);
+            ui.addVal(playerNumber, 33);
+            ui.setVal(2 + playerNumber, 100);
+        }
+
+        if (inputBlock && hitstun <= 0.0f && ui.getVal(2 + playerNumber) > 0)
+        {
+            anim.SetBool("Blocking", true);
+            block = true;
+            hit = true;
+            actionable = false;
+            ui.addVal(2 + playerNumber, -Time.deltaTime * 10);
+            if (ui.getVal(2 + playerNumber) <= 0) {
+                ui.setVal(2 + playerNumber, -25);
+            }
+            
+        } else {
+            anim.SetBool("Blocking", false);
+            block = false;
+            ui.addVal(2 + playerNumber, Time.deltaTime * 5f);
+        }
 
         if (actionable && inputAttack) {
             if (IsGrounded()) {
@@ -100,6 +144,7 @@ public class Controller : MonoBehaviour
                         } else {
                             Attacks[4].attack(this);
                             tripcd = 2.0f;
+                            fscd = 2.0f;
                         }
                     } else {
                         Attacks[0].attack(this);
@@ -127,15 +172,11 @@ public class Controller : MonoBehaviour
 
             Vector3 final = Vector3.zero;
             final.y = rb.velocity.y;
-            if (IsGrounded() || footstool) {
-                if (moveLeft) { final.x -= moveMod; }
-                if (moveRight) { final.x += moveMod; }
-                if (jump) { final.y += jumpMod; }
-            } else {
-                if (!footstool) {
-                    final.x = rb.velocity.x;
-                }
-            }
+            
+            if (moveLeft) { final.x -= moveMod; }
+            if (moveRight) { final.x += moveMod; }
+            if (jump) { final.y += jumpMod; }
+            
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 
                 spcd = 0f;
@@ -159,8 +200,9 @@ public class Controller : MonoBehaviour
         } else {
             rb.sharedMaterial = materials[1];
             playerCollider.sharedMaterial = materials[1];
-
-            hitstun -= Time.deltaTime;
+            if (hitstun > 0.0f) {
+                hitstun -= Time.deltaTime;
+            }
             if (hitstun <= 0.0f) {
                 actionable = true;
             }
@@ -170,6 +212,9 @@ public class Controller : MonoBehaviour
             fscd -= Time.deltaTime;
         }
         if (spcd > 0) {
+            if (IsGrounded()) {
+                spcd = 0;
+            }
             spcd -= Time.deltaTime;
         }
     }

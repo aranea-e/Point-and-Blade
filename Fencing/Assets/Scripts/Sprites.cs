@@ -24,6 +24,9 @@ public class Sprites : MonoBehaviour
 
         if (control.bladeActive()) {
             blade.sprite = sprites[5];
+            if (control.block) {
+                blade.sprite = sprites[6];
+            }
         } else {
             blade.sprite = sprites[4];
         }
