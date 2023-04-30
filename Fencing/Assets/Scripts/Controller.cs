@@ -18,6 +18,7 @@ public class Controller : MonoBehaviour
     [SerializeField] BoxCollider2D playerCollider;
     [SerializeField] BoxCollider2D foot;
     [SerializeField] BoxCollider2D hitbox;
+    [SerializeField] BoxCollider2D footstoolHitbox;
 
     [SerializeField] KeyCode l;
     [SerializeField] KeyCode r;
@@ -120,10 +121,15 @@ public class Controller : MonoBehaviour
             trans.localScale = new Vector3(-1f, 1f, 1f);
         }
 
+        footstoolHitbox.enabled = true;
         if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) || (!starter.firstTime && starter.timer > 1.5f)) {
             actionable = false;
             if (inputAttack) {
                 buffered = true;
+            }
+            if (hitstun > 0.0f)
+            {
+                footstoolHitbox.enabled = false;
             }
         } 
         

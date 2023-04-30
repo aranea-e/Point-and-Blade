@@ -1102,6 +1102,7 @@ MonoBehaviour:
   playerCollider: {fileID: 799690744}
   foot: {fileID: 941109665}
   hitbox: {fileID: 973599707}
+  footstoolHitbox: {fileID: 1360521435}
   l: 108
   r: 39
   j: 112
@@ -3884,6 +3885,7 @@ MonoBehaviour:
   playerCollider: {fileID: 2142100714}
   foot: {fileID: 1623742529}
   hitbox: {fileID: 175953658}
+  footstoolHitbox: {fileID: 1828921096}
   l: 97
   r: 100
   j: 119

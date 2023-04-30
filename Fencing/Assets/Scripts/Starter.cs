@@ -45,6 +45,7 @@ public class Starter : MonoBehaviour
         P2txt.enabled = false;
         if (timer > 0)
         {
+            ui.Start();
             timer -= Time.deltaTime;
             sprite.sprite = sprites[(int) timer];
             P1.starting = true;
