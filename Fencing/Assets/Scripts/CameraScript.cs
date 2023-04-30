@@ -7,7 +7,7 @@ public class CameraScript : MonoBehaviour
     [SerializeField] Controller P1;
     [SerializeField] Controller P2;
     [SerializeField] float zoomMod;
-    [SerializeField] Transform trans;
+    public Transform trans;
 
     void Update()
     {

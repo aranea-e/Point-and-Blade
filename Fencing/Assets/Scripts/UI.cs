@@ -6,14 +6,17 @@ public class UI : MonoBehaviour
 {
     [SerializeField] RectTransform[] elements;
     [SerializeField] float[] vals;
+    [SerializeField] Starter starter;
     public Controller P1;
     public Controller P2;
 
-    void Start() {
+    public void Start() {
         for (int i = 0; i < 4; i++)
         {
             vals[i] = 100;
         }
+        vals[4] = 0;
+        vals[5] = 0;
     }
 
     void Update() {
@@ -36,6 +39,13 @@ public class UI : MonoBehaviour
         vals[val] += add;
         if (vals[val] > 100) {
             vals[val] = 100;
+        }
+
+        if (vals[0] <= 0)
+        {
+            starter.reStart(1);
+        } else if (vals[1] <= 0) {
+            starter.reStart(0);
         }
     }
     

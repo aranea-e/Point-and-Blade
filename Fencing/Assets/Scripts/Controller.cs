@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour
 {
     [SerializeField] Controller other;
     public UI ui;
     public int playerNumber;
+    Controls controls;
+    [SerializeField] Starter starter;
     
     Rigidbody2D rb;
     public Transform trans;
@@ -22,6 +25,7 @@ public class Controller : MonoBehaviour
     [SerializeField] KeyCode d;
     [SerializeField] KeyCode a;
     [SerializeField] KeyCode b;
+    [SerializeField] KeyCode menu;
     [SerializeField] PhysicsMaterial2D[] materials;
 
     bool moveLeft;
@@ -37,8 +41,9 @@ public class Controller : MonoBehaviour
     [SerializeField] bool hit;     
     float fscd;
     float spcd;
-    float tripcd;
+    public float tripcd;
     public bool actionable;
+    public bool starting;
     public float hitstun;
     [SerializeField] float moveMod;
     [SerializeField] float jumpMod;
@@ -52,10 +57,23 @@ public class Controller : MonoBehaviour
     void Awake() {
         rb = gameObject.GetComponent<Rigidbody2D>();
         trans = gameObject.GetComponent<Transform>();
+        controls = FindObjectOfType<Controls>();
         if (attackList != null) { Attacks = attackList; }
+
+        l = controls.controls[0 + playerNumber * 6];
+        d = controls.controls[1 + playerNumber * 6];
+        r = controls.controls[2 + playerNumber * 6];
+        b = controls.controls[3 + playerNumber * 6];
+        j = controls.controls[4 + playerNumber * 6];
+        a = controls.controls[5 + playerNumber * 6];
     }
 
     void Update() {
+        if (Input.GetKey(menu)) {
+            Destroy(controls.gameObject);
+            SceneManager.LoadScene(0);
+        }
+
         moveLeft = Input.GetKey(l);
         moveRight = Input.GetKey(r);
         inputDown = Input.GetKey(d);
@@ -72,11 +90,11 @@ public class Controller : MonoBehaviour
             bladeCollider.enabled = false;
         }
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || anim.GetCurrentAnimatorStateInfo(0).IsName("Block")) {
             hit = false;
         }
 
-        if (hitbox.IsTouchingLayers(hurt) && !other.hit && !other.block 
+        if (hitbox.IsTouchingLayers(hurt) && !other.hit && other.currentAttack.name != "Block"
                 && !(block && other.currentAttack.name != "Trip Attack" && other.currentAttack.name != "Weak Trip Attack")) {
             other.currentAttack.hit(this);
             other.hit = true;
@@ -89,7 +107,6 @@ public class Controller : MonoBehaviour
                 ui.setVal(2 + playerNumber, -25);
             }
             ui.addVal(4 + playerNumber, other.currentAttack.damage * 3);
-            currentAttack = Attacks[6];
             currentAttack.hit(other);
         }
 
@@ -103,7 +120,7 @@ public class Controller : MonoBehaviour
             trans.localScale = new Vector3(-1f, 1f, 1f);
         }
 
-        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))) {
+        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) || (!starter.firstTime && starter.timer > 1.5f)) {
             actionable = false;
             if (inputAttack) {
                 buffered = true;
@@ -116,11 +133,13 @@ public class Controller : MonoBehaviour
             ui.setVal(2 + playerNumber, 100);
         }
 
-        if (inputBlock && hitstun <= 0.0f && ui.getVal(2 + playerNumber) > 0)
+        if (inputBlock && hitstun <= 0.0f && ui.getVal(2 + playerNumber) > 0 
+                && (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") 
+                || anim.GetCurrentAnimatorStateInfo(0).IsName("Block")))
         {
             anim.SetBool("Blocking", true);
             block = true;
-            hit = true;
+            currentAttack = Attacks[6];
             actionable = false;
             ui.addVal(2 + playerNumber, -Time.deltaTime * 10);
             if (ui.getVal(2 + playerNumber) <= 0) {
@@ -140,7 +159,6 @@ public class Controller : MonoBehaviour
                         if (tripcd > 0)
                         {
                             Attacks[5].attack(this);
-                            tripcd = .5f;
                         } else {
                             Attacks[4].attack(this);
                             tripcd = 2.0f;
@@ -166,7 +184,7 @@ public class Controller : MonoBehaviour
             actionable = false;
         }
 
-        if (actionable && !slip) {
+        if (actionable && !slip && !starting) {
             rb.sharedMaterial = materials[0];
             playerCollider.sharedMaterial = materials[0];
 
@@ -197,6 +215,7 @@ public class Controller : MonoBehaviour
                 final.x = moveMod / 2;
             }
             rb.velocity = final;
+            anim.SetTrigger("Interrupt");
         } else {
             rb.sharedMaterial = materials[1];
             playerCollider.sharedMaterial = materials[1];
