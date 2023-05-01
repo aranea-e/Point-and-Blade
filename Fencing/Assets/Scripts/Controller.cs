@@ -198,6 +198,7 @@ public class Controller : MonoBehaviour
                 
                 if ((inputRight && trans.localScale.x == 1) || (inputLeft && trans.localScale.x == -1)) {
                     Attacks[1].attack(this);
+                    rb.velocity = new Vector3(moveMod * trans.localScale.x, rb.velocity.y, 0);
                     rb.AddForce(new Vector3(trans.localScale.x * 250, 0, 0));
                 }
                 if ((inputRight && trans.localScale.x == -1) || (inputLeft && trans.localScale.x == 1))
@@ -225,7 +226,7 @@ public class Controller : MonoBehaviour
             
             if (inputLeft) { final.x -= moveMod; }
             if (inputRight) { final.x += moveMod; }
-            if (jump) { final.y += jumpMod; audioManager.play("Jump"); jAttackWindow = 0.1f; }
+            if (jump) { final.y += jumpMod; audioManager.play("Jump"); jAttackWindow = 0.05f; }
             
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 
