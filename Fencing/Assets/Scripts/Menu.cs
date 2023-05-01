@@ -12,6 +12,7 @@ public class Menu : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] buttonText;
     [SerializeField] GameObject controlPrefab;
     [SerializeField] Toggle[] controllerSelection;
+    [SerializeField] Toggle computer;
     Controls controlObject;
 
     void Start() {
@@ -38,6 +39,11 @@ public class Menu : MonoBehaviour
         }
         if (!PlayerPrefs.HasKey("S2")) {
             PlayerPrefs.SetInt("S2", 0);
+        }
+        if (!PlayerPrefs.HasKey("Com")) {
+            PlayerPrefs.SetInt("Com", 0);
+        } else {
+            computer.isOn = PlayerPrefs.GetInt("Com") == 1;
         }
         
         if (FindObjectsOfType<PlayerControlManager>().Length > 0 
@@ -108,6 +114,7 @@ public class Menu : MonoBehaviour
         if (tempArr.Length > 0) { tempArr[0].setStickJump(controllerSelection[2].isOn); }
         if (tempArr.Length > 1) { tempArr[1].setStickJump(controllerSelection[3].isOn); }
         controlObject.playerControlManagers = tempArr;
+        controlObject.com = computer.isOn;
         SceneManager.LoadScene(1);
     }
 
@@ -133,13 +140,17 @@ public class Menu : MonoBehaviour
             } else {
                 PlayerPrefs.SetInt("C" + (button + 1), 0);
             }
-            return;
-        }
-        if (controllerSelection[button].isOn)
+        } else if (button < 4 && controllerSelection[button].isOn)
         {
             PlayerPrefs.SetInt("S" + (button - 1), 1);
-        } else if (controllerSelection[button].interactable) {
+        } else if (button < 4 && controllerSelection[button].interactable) {
             PlayerPrefs.SetInt("S" + (button - 1), 0);
+        } else {
+            if (computer.isOn) {
+                PlayerPrefs.SetInt("Com", 1);
+            } else {
+                PlayerPrefs.SetInt("Com", 0);
+            }
         }
     }
 

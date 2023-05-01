@@ -5,12 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour
 {
-    [SerializeField] Controller other;
+    public Controller other;
     public UI ui;
     public int playerNumber;
     Controls controls;
     [SerializeField] Starter starter;
     public AudioManager audioManager;
+    Computer computerController;
     
     Rigidbody2D rb;
     public Transform trans;
@@ -66,6 +67,7 @@ public class Controller : MonoBehaviour
         trans = gameObject.GetComponent<Transform>();
         controls = FindObjectOfType<Controls>();
         audioManager = FindObjectOfType<AudioManager>();
+        computerController = FindObjectOfType<Computer>();
         if (attackList != null) { Attacks = attackList; }
 
         l = controls.controls[0 + playerNumber * 6];
@@ -84,7 +86,17 @@ public class Controller : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        if ((controls.P1controller && playerNumber == 0) || (controls.P2controller && playerNumber == 1))
+        if (playerNumber == 1 && controls.com)
+        {
+            inputLeft = computerController.inputLeft;
+            inputRight = computerController.inputRight;
+            inputDown = computerController.inputDown;
+            inputBlock = computerController.inputBlock;
+            inputAttack = computerController.inputAttack;
+            inputJump = computerController.inputJump && !jHeld;
+            aHeld = computerController.inputAttack && ((!aHeld) || buffered);
+            jHeld = computerController.inputJump;
+        } else if ((controls.P1controller && playerNumber == 0) || (controls.P2controller && playerNumber == 1))
         {
             inputLeft = controls.playerControlManagers[playerNumber].left;
             inputRight = controls.playerControlManagers[playerNumber].right;
