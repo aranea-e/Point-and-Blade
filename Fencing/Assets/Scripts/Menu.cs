@@ -26,7 +26,38 @@ public class Menu : MonoBehaviour
                 PlayerPrefs.SetString(i.ToString(), controls[i].ToString());
             }
         }
+
+        if (!PlayerPrefs.HasKey("C1")) {
+            PlayerPrefs.SetInt("C1", 1);
+        }
+        if (!PlayerPrefs.HasKey("C2")) {
+            PlayerPrefs.SetInt("C2", 1);
+        }
+        if (!PlayerPrefs.HasKey("S1")) {
+            PlayerPrefs.SetInt("S1", 0);
+        }
+        if (!PlayerPrefs.HasKey("S2")) {
+            PlayerPrefs.SetInt("S2", 0);
+        }
         
+        if (FindObjectsOfType<PlayerControlManager>().Length > 0 
+                && PlayerPrefs.HasKey("C1") && PlayerPrefs.GetInt("C1") == 1)
+        {
+            controllerSelection[0].isOn = true;
+            if (PlayerPrefs.HasKey("S1") && PlayerPrefs.GetInt("S1") == 1)
+            {
+                controllerSelection[2].isOn = true;
+            }
+        }
+        if (FindObjectsOfType<PlayerControlManager>().Length > 1 
+             && PlayerPrefs.HasKey("C2") && PlayerPrefs.GetInt("C2") == 1)
+        {
+            controllerSelection[1].isOn = true;
+            if (PlayerPrefs.HasKey("S2") && PlayerPrefs.GetInt("S2") == 1)
+            {
+                controllerSelection[3].isOn = true;
+            }
+        }
     }
 
     void Update()
@@ -40,6 +71,20 @@ public class Menu : MonoBehaviour
         {
             controllerSelection[i].interactable = FindObjectsOfType<PlayerControlManager>().Length > i % 2;
             if (!controllerSelection[i].interactable) { controllerSelection[i].isOn = false; }
+        }
+
+        controllerSelection[2].interactable = controllerSelection[0].isOn;
+        controllerSelection[3].interactable = controllerSelection[1].isOn;
+
+        if (controllerSelection[2].interactable) {
+            controllerSelection[2].isOn = PlayerPrefs.GetInt("S1") == 1;
+        } else {
+            controllerSelection[2].isOn = false;
+        }
+        if (controllerSelection[3].interactable) {
+            controllerSelection[3].isOn = PlayerPrefs.GetInt("S2") == 1;
+        } else {
+            controllerSelection[3].isOn = false;
         }
     }
 
@@ -76,6 +121,47 @@ public class Menu : MonoBehaviour
         {
             controls[selectedButton] = Event.current.keyCode;
             PlayerPrefs.SetString(selectedButton.ToString(), Event.current.keyCode.ToString());
+        }
+    }
+
+    public void updatePlayerPrefs(int button) {
+        if (button < 2)
+        {
+            if (controllerSelection[button].isOn)
+            {
+                PlayerPrefs.SetInt("C" + (button + 1), 1);
+            } else {
+                PlayerPrefs.SetInt("C" + (button + 1), 0);
+            }
+            return;
+        }
+        if (controllerSelection[button].isOn)
+        {
+            PlayerPrefs.SetInt("S" + (button - 1), 1);
+        } else if (controllerSelection[button].interactable) {
+            PlayerPrefs.SetInt("S" + (button - 1), 0);
+        }
+    }
+
+    public void controllerActivate(int controller) {
+        
+        if (controller == 0
+                && PlayerPrefs.HasKey("C1") && PlayerPrefs.GetInt("C1") == 1)
+        {
+            controllerSelection[0].isOn = true;
+            if (PlayerPrefs.HasKey("S1") && PlayerPrefs.GetInt("S1") == 1)
+            {
+                controllerSelection[2].isOn = true;
+            }
+        }
+        if (controller == 1 
+                && PlayerPrefs.HasKey("C2") && PlayerPrefs.GetInt("C2") == 1)
+        {
+            controllerSelection[1].isOn = true;
+            if (PlayerPrefs.HasKey("S2") && PlayerPrefs.GetInt("S2") == 1)
+            {
+                controllerSelection[3].isOn = true;
+            }
         }
     }
 }

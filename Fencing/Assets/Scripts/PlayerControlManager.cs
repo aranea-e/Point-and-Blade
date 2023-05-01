@@ -13,12 +13,17 @@ public class PlayerControlManager : MonoBehaviour
     public bool up;
     public bool right;
     public bool attack;
+    public bool menu;
 
     public bool stickJump;
 
     void Awake() {
         playerNumber = FindObjectsOfType<PlayerControlManager>().Length - 1;
         DontDestroyOnLoad(this.gameObject);
+
+        if (FindObjectOfType<Menu>() != null) {
+            FindObjectOfType<Menu>().controllerActivate(playerNumber);
+        }
     }
 
     public void Left(InputAction.CallbackContext context) {
@@ -47,6 +52,10 @@ public class PlayerControlManager : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext context) {
         if (context.started) { attack = true; } else if (context.canceled) { attack = false; }
+    }
+
+    public void Menu(InputAction.CallbackContext context) {
+        if (context.started) { menu = true; } else if (context.canceled) { menu = false; }
     }
 
     public void setStickJump(bool state) {

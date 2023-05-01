@@ -52,6 +52,7 @@ MonoBehaviour:
   up: 0
   right: 0
   attack: 0
+  menu: 0
   stickJump: 0
 --- !u!114 &6455962437717879018
 MonoBehaviour:
@@ -190,6 +191,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: b1cb5ea8-d9ca-4cc0-9bb3-3b9371fc3f3c
     m_ActionName: Gameplay/StickUp[/XInputControllerWindows1/leftStick/up,/XInputControllerWindows/leftStick/up]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6455962437717879016}
+        m_TargetAssemblyTypeName: PlayerControlManager, Assembly-CSharp
+        m_MethodName: Menu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 36bbe12d-f7a3-40c9-8ec8-7c42718c9079
+    m_ActionName: Gameplay/Menu[/XInputControllerWindows/start,/XInputControllerWindows/select]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay

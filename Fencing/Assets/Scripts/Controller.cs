@@ -77,7 +77,9 @@ public class Controller : MonoBehaviour
     }
 
     void Update() {
-        if (Input.GetKey(menu)) {
+        if (Input.GetKey(menu) || 
+            (controls.P1controller && controls.playerControlManagers[0].menu) ||
+            (controls.P2controller && controls.playerControlManagers[1].menu)) {
             Destroy(controls.gameObject);
             SceneManager.LoadScene(0);
         }
