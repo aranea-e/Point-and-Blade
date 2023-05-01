@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
@@ -10,6 +11,7 @@ public class Menu : MonoBehaviour
     [SerializeField] KeyCode[] controls;
     [SerializeField] TextMeshProUGUI[] buttonText;
     [SerializeField] GameObject controlPrefab;
+    [SerializeField] Toggle[] controllerSelection;
     Controls controlObject;
 
     void Start() {
@@ -33,6 +35,12 @@ public class Menu : MonoBehaviour
         {
             buttonText[i].text = controls[i].ToString();
         }
+
+        for (int i = 0; i < 4; i++)
+        {
+            controllerSelection[i].interactable = FindObjectsOfType<PlayerControlManager>().Length > i % 2;
+            if (!controllerSelection[i].interactable) { controllerSelection[i].isOn = false; }
+        }
     }
 
     public void selectButton(int i) {
@@ -43,6 +51,18 @@ public class Menu : MonoBehaviour
         DontDestroyOnLoad(Instantiate(controlPrefab, new Vector3(0, 0, 0), Quaternion.identity));
         controlObject = FindObjectOfType<Controls>();
         controlObject.controls = controls;
+        controlObject.P1controller = controllerSelection[0].isOn;
+        controlObject.P2controller = controllerSelection[1].isOn;
+        PlayerControlManager[] tempArr = FindObjectsOfType<PlayerControlManager>();
+        if (tempArr.Length > 0 && tempArr[0].playerNumber == 1)
+        {
+            PlayerControlManager temp = tempArr[0];
+            tempArr[0] = tempArr[1];
+            tempArr[1] = temp;
+        }
+        if (tempArr.Length > 0) { tempArr[0].setStickJump(controllerSelection[2].isOn); }
+        if (tempArr.Length > 1) { tempArr[1].setStickJump(controllerSelection[3].isOn); }
+        controlObject.playerControlManagers = tempArr;
         SceneManager.LoadScene(1);
     }
 

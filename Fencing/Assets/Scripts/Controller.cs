@@ -30,13 +30,18 @@ public class Controller : MonoBehaviour
     [SerializeField] KeyCode menu;
     [SerializeField] PhysicsMaterial2D[] materials;
 
-    bool moveLeft;
-    bool moveRight;
+    bool inputLeft;
+    bool inputRight;
     bool inputDown;
-    bool jump;
     bool inputAttack;
-    bool buffered;
+    bool aHeld;
     bool inputBlock;
+    bool inputJump;
+    bool jHeld;
+
+    bool jump;
+    float jAttackWindow;
+    bool buffered;
     public bool block;
     bool footstool;
     bool slip; 
@@ -77,16 +82,30 @@ public class Controller : MonoBehaviour
             SceneManager.LoadScene(0);
         }
 
-        moveLeft = Input.GetKey(l);
-        moveRight = Input.GetKey(r);
-        inputDown = Input.GetKey(d);
-        jump = Input.GetKeyDown(j) && IsGrounded();
-        inputAttack = Input.GetKeyDown(a) || (Input.GetKey(a) && buffered);
+        if ((controls.P1controller && playerNumber == 0) || (controls.P2controller && playerNumber == 1))
+        {
+            inputLeft = controls.playerControlManagers[playerNumber].left;
+            inputRight = controls.playerControlManagers[playerNumber].right;
+            inputDown = controls.playerControlManagers[playerNumber].down;
+            inputBlock = controls.playerControlManagers[playerNumber].block;
+            inputAttack = controls.playerControlManagers[playerNumber].attack && ((!aHeld) || buffered);
+            inputJump = controls.playerControlManagers[playerNumber].up && !jHeld;
+            aHeld = controls.playerControlManagers[playerNumber].attack;
+            jHeld = controls.playerControlManagers[playerNumber].up;
+        } else {
+            inputLeft = Input.GetKey(l);
+            inputRight = Input.GetKey(r);
+            inputDown = Input.GetKey(d);
+            inputBlock = Input.GetKey(b);
+            inputAttack = Input.GetKeyDown(a) || (Input.GetKey(a) && buffered);
+            inputJump = Input.GetKeyDown(j);
+        }
+        
+        jump = inputJump && IsGrounded();
         if (!Input.GetKey(a) || inputAttack) {
             buffered = false;
         }
-        inputBlock = Input.GetKey(b);
-        footstool = Input.GetKeyDown(j) && foot.IsTouchingLayers(fslm);
+        footstool = inputJump && foot.IsTouchingLayers(fslm);
         slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
 
         if (hit) {
@@ -161,8 +180,8 @@ public class Controller : MonoBehaviour
         }
 
         if (actionable && inputAttack) {
-            if (IsGrounded()) {
-                if (!(moveLeft ^ moveRight)) {
+            if (IsGrounded() || jAttackWindow > 0.0f) {
+                if (!(inputLeft ^ inputRight)) {
                     if (inputDown) {
                         if (tripcd > 0)
                         {
@@ -177,11 +196,11 @@ public class Controller : MonoBehaviour
                     }
                 }
                 
-                if ((moveRight && trans.localScale.x == 1) || (moveLeft && trans.localScale.x == -1)) {
+                if ((inputRight && trans.localScale.x == 1) || (inputLeft && trans.localScale.x == -1)) {
                     Attacks[1].attack(this);
                     rb.AddForce(new Vector3(trans.localScale.x * 250, 0, 0));
                 }
-                if ((moveRight && trans.localScale.x == -1) || (moveLeft && trans.localScale.x == 1))
+                if ((inputRight && trans.localScale.x == -1) || (inputLeft && trans.localScale.x == 1))
                 {
                     Attacks[2].attack(this);
                 }
@@ -191,6 +210,11 @@ public class Controller : MonoBehaviour
             
             actionable = false;
         }
+        
+        if (jAttackWindow > 0.0f)
+        {
+            jAttackWindow -= Time.deltaTime;
+        }
 
         if (actionable && !slip && !starting) {
             rb.sharedMaterial = materials[0];
@@ -199,9 +223,9 @@ public class Controller : MonoBehaviour
             Vector3 final = Vector3.zero;
             final.y = rb.velocity.y;
             
-            if (moveLeft) { final.x -= moveMod; }
-            if (moveRight) { final.x += moveMod; }
-            if (jump) { final.y += jumpMod; audioManager.play("Jump"); }
+            if (inputLeft) { final.x -= moveMod; }
+            if (inputRight) { final.x += moveMod; }
+            if (jump) { final.y += jumpMod; audioManager.play("Jump"); jAttackWindow = 0.1f; }
             
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 
