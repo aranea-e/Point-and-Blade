@@ -38,10 +38,10 @@ public class Controller : MonoBehaviour
     bool aHeld;
     bool inputBlock;
     bool inputJump;
-    bool jHeld;
+    public bool jHeld;
 
     bool jump;
-    float jAttackWindow;
+    public float jAttackWindow;
     bool buffered;
     public bool block;
     bool footstool;
@@ -88,6 +88,7 @@ public class Controller : MonoBehaviour
 
         if (playerNumber == 1 && controls.com)
         {
+            computerController.computerUpdate();
             inputLeft = computerController.inputLeft;
             inputRight = computerController.inputRight;
             inputDown = computerController.inputDown;
@@ -122,7 +123,7 @@ public class Controller : MonoBehaviour
         footstool = inputJump && foot.IsTouchingLayers(fslm);
         slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
 
-        if (hit) {
+        if (hit || hitstun > 0f) {
             bladeCollider.enabled = false;
         }
 
@@ -137,7 +138,8 @@ public class Controller : MonoBehaviour
             actionable = false;
         }
 
-        if (block && bladeCollider.IsTouchingLayers(hurt)) {
+        if (block && (bladeCollider.IsTouchingLayers(hurt) || hitbox.IsTouchingLayers(hurt))
+                && other.currentAttack.name != "Block") {
             ui.addVal(2 + playerNumber, -33);
             if (ui.getVal(2 + playerNumber) <= 0) {
                 ui.setVal(2 + playerNumber, -25);
@@ -240,7 +242,7 @@ public class Controller : MonoBehaviour
             
             if (inputLeft) { final.x -= moveMod; }
             if (inputRight) { final.x += moveMod; }
-            if (jump) { final.y += jumpMod; audioManager.play("Jump"); jAttackWindow = 0.05f; }
+            if (jump) { final.y = jumpMod; audioManager.play("Jump"); jAttackWindow = 0.05f; }
             
             if (footstool && fscd <= 0) { 
                 fscd = 2f; 

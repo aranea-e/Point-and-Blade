@@ -1114,6 +1114,8 @@ MonoBehaviour:
   materials:
   - {fileID: 6200000, guid: cf1ce050b82217744815ebb3fdc17bfd, type: 2}
   - {fileID: 6200000, guid: e5f34ca796b8d4f479aa375352d87f4f, type: 2}
+  jHeld: 0
+  jAttackWindow: 0
   block: 0
   hit: 0
   spcd: 0
@@ -1598,6 +1600,18 @@ MonoBehaviour:
   inputAttack: 0
   inputBlock: 0
   inputJump: 0
+  inputForward: 0
+  inputBackward: 0
+  state: 0
+  stateTimer: 0
+  actionTimer: 0
+  moveForward: 0
+  move: 0
+  moveDirectionTimer: 0
+  defend: 0
+  defendTimer: 0
+  lungeReaction: 0
+  lungeReacted: 0
 --- !u!1 &941109664
 GameObject:
   m_ObjectHideFlags: 0
@@ -4033,6 +4047,8 @@ MonoBehaviour:
   materials:
   - {fileID: 6200000, guid: cf1ce050b82217744815ebb3fdc17bfd, type: 2}
   - {fileID: 6200000, guid: e5f34ca796b8d4f479aa375352d87f4f, type: 2}
+  jHeld: 0
+  jAttackWindow: 0
   block: 0
   hit: 0
   spcd: 0
@@ -4080,8 +4096,8 @@ MonoBehaviour:
   - name: Weak Trip Attack
     trigger: Trip
     damage: 6
-    knockback: {x: 5, y: 2}
-    stun: 0.3
+    knockback: {x: 5, y: 0}
+    stun: 0.2
   - name: Block
     trigger: 
     damage: 0
