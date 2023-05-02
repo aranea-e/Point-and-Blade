@@ -204,7 +204,7 @@ public class Controller : MonoBehaviour
                             Attacks[5].attack(this);
                         } else {
                             Attacks[4].attack(this);
-                            tripcd = 2.0f;
+                            tripcd = 2.2f;
                             fscd = 2.0f;
                         }
                     } else {
