@@ -50,6 +50,7 @@ public class Controller : MonoBehaviour
     float fscd;
     public float spcd;
     public float tripcd;
+    public int tripCounter;
     public bool actionable;
     public bool starting;
     public float hitstun;
@@ -140,7 +141,7 @@ public class Controller : MonoBehaviour
 
         if (block && (bladeCollider.IsTouchingLayers(hurt) || hitbox.IsTouchingLayers(hurt))
                 && other.currentAttack.name != "Block") {
-            ui.addVal(2 + playerNumber, -33);
+            ui.addVal(2 + playerNumber, -50);
             if (ui.getVal(2 + playerNumber) <= 0) {
                 ui.setVal(2 + playerNumber, -25);
             }
@@ -174,6 +175,7 @@ public class Controller : MonoBehaviour
             ui.setVal(4 + playerNumber, 0);
             ui.addVal(playerNumber, 33);
             ui.setVal(2 + playerNumber, 100);
+            audioManager.play("Adren");
         }
 
         if (inputBlock && hitstun <= 0.0f && ui.getVal(2 + playerNumber) > 0 
@@ -184,35 +186,37 @@ public class Controller : MonoBehaviour
             block = true;
             currentAttack = Attacks[6];
             actionable = false;
-            ui.addVal(2 + playerNumber, -Time.deltaTime * 10);
+            ui.addVal(2 + playerNumber, -Time.deltaTime * 30f);
             if (ui.getVal(2 + playerNumber) <= 0) {
                 ui.setVal(2 + playerNumber, -25);
+                audioManager.play("NoBlock");
             }
             
         } else {
             anim.SetBool("Blocking", false);
             block = false;
-            ui.addVal(2 + playerNumber, Time.deltaTime * 5f);
+            ui.addVal(2 + playerNumber, Time.deltaTime * 10f);
         }
 
         if (actionable && inputAttack) {
             if (IsGrounded() || jAttackWindow > 0.0f) {
-                if (!(inputLeft ^ inputRight)) {
-                    if (inputDown) {
-                        if (tripcd > 0)
-                        {
-                            Attacks[5].attack(this);
-                        } else {
-                            Attacks[4].attack(this);
-                            tripcd = 2.2f;
-                            fscd = 2.0f;
-                        }
-                    } else {
-                        Attacks[0].attack(this);
-                    }
+                if (!(inputLeft ^ inputRight) && !inputDown) {
+                    
+                    Attacks[0].attack(this);
                 }
                 
-                if ((inputRight && trans.localScale.x == 1) || (inputLeft && trans.localScale.x == -1)) {
+                if (inputDown) {
+                    if (tripcd > 0)
+                    {
+                        tripCounter++;
+                        Attacks[5].attack(this);
+                    } else {
+                        Attacks[4].attack(this);
+                        tripcd = 2.2f;
+                        fscd = 2.0f;
+                        tripCounter = 0;
+                    }
+                } else if ((inputRight && trans.localScale.x == 1) || (inputLeft && trans.localScale.x == -1)) {
                     Attacks[1].attack(this);
                     rb.velocity = new Vector3(moveMod * trans.localScale.x, rb.velocity.y, 0);
                     rb.AddForce(new Vector3(trans.localScale.x * 250, 0, 0));

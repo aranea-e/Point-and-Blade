@@ -444,7 +444,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.0625}
+  m_Size: {x: 0.45, y: 0.0625}
   m_EdgeRadius: 0
 --- !u!1 &272389874
 GameObject:
@@ -1120,6 +1120,7 @@ MonoBehaviour:
   hit: 0
   spcd: 0
   tripcd: 0
+  tripCounter: 0
   actionable: 0
   starting: 0
   hitstun: 0
@@ -3025,7 +3026,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.0625}
+  m_Size: {x: 0.45, y: 0.0625}
   m_EdgeRadius: 0
 --- !u!1 &1666945685
 GameObject:
@@ -3104,6 +3105,36 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Slip
     clip: {fileID: 8300000, guid: 2ec91e6b5be077e418f6eff62fc9dcb4, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Adren
+    clip: {fileID: 8300000, guid: c5fa88a720c3c83489b4b4c4ec24b78c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: AdrenFull
+    clip: {fileID: 8300000, guid: a23fc885323821d479776cf4a38827d5, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: NoBlock
+    clip: {fileID: 8300000, guid: 9fae3e74076a1fc499c194f516528957, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Start
+    clip: {fileID: 8300000, guid: 23383f84a2783cb46a9fee585b3dbef7, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Starter
+    clip: {fileID: 8300000, guid: bc8ff4ef208ab514898ea73767306d0c, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -4053,6 +4084,7 @@ MonoBehaviour:
   hit: 0
   spcd: 0
   tripcd: 0
+  tripCounter: 0
   actionable: 0
   starting: 0
   hitstun: 0

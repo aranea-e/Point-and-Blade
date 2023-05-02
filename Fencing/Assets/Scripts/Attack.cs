@@ -15,6 +15,14 @@ public class Attack
 
     public void hit(Controller reciever) {
         reciever.applyHitstun(stun);
+        if (name == "Weak Trip Attack")
+        {
+            reciever.applyHitstun(stun / reciever.other.tripCounter);
+            if (stun / reciever.other.tripCounter < 1 / 16.0)
+            {
+                reciever.applyHitstun(0f);
+            }
+        }
         reciever.applyKnockback(knockback);
         reciever.spcd = 3.0f;
         if (reciever.playerNumber == 0)

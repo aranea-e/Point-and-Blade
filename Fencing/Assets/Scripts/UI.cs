@@ -36,6 +36,11 @@ public class UI : MonoBehaviour
     }
 
     public void addVal(int val, float add) {
+        if (val > 3 && vals[val] + add >= 100 && vals[val] < 100)
+        {
+            FindObjectOfType<AudioManager>().play("AdrenFull");
+        }
+
         vals[val] += add;
         if (vals[val] > 100) {
             vals[val] = 100;

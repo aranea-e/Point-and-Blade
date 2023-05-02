@@ -25,6 +25,7 @@ public class Starter : MonoBehaviour
     {
         timer = 3.0f;
         firstTime = true;
+        FindObjectOfType<AudioManager>().play("Starter");
     }
 
     public void reStart(int winner) {
@@ -34,10 +35,15 @@ public class Starter : MonoBehaviour
         P1txt.text = scores[0].ToString();
         P2txt.text = scores[1].ToString();
         ui.Start();
+        FindObjectOfType<AudioManager>().play("Starter");
     }
     
     void Update()
     {
+        if (sprite.enabled && timer <= 0)
+        {
+            FindObjectOfType<AudioManager>().play("Start");
+        }
         P1.starting = false;
         P2.starting = false;
         sprite.enabled = false;
@@ -47,6 +53,10 @@ public class Starter : MonoBehaviour
         {
             ui.Start();
             timer -= Time.deltaTime;
+            if (sprite.sprite != sprites[(int) timer])
+            {
+                FindObjectOfType<AudioManager>().play("Starter");
+            }
             sprite.sprite = sprites[(int) timer];
             P1.starting = true;
             P2.starting = true;
