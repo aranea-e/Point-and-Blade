@@ -124,8 +124,12 @@ public class Controller : MonoBehaviour
             buffered = false;
         }
         footstool = inputJump && foot.IsTouchingLayers(fslm);
-        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0 
-            && !(Mathf.Abs(trans.position.x - other.trans.position.x) > .51);
+        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
+        if (slip && Mathf.Abs(trans.position.x - other.trans.position.x) > .51)
+        {
+            slip = false;
+            trans.position = new Vector3(other.trans.position.x - .52f * trans.localScale.x, trans.position.y, 0);
+        }
         if (hit || hitstun > 0f) {
             bladeCollider.enabled = false;
         }
