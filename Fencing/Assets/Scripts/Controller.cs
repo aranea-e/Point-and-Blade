@@ -157,7 +157,11 @@ public class Controller : MonoBehaviour
             currentAttack.hit(other);
         }
 
-        if (tripcd > 0f) {
+        if (hitstun > 0.0f && tripcd > 0f) {
+            tripcd = 0f;
+            tripCounterSprite.enabled = false;
+            tripCounter = 0;
+        } else if (tripcd > 0f) {
             tripcd -= Time.deltaTime;
             tripCounterSprite.enabled = true;
             if (tripCounter < 4)
@@ -165,7 +169,6 @@ public class Controller : MonoBehaviour
                 tripCounterSprite.sprite = tripCounterSpriteSprites[tripCounter];
             } else {
                 tripCounterSprite.sprite = tripCounterSpriteSprites[3];
-                tripCounter = 0;
             }
         } else {
             tripCounterSprite.enabled = false;
