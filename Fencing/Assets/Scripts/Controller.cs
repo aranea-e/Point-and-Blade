@@ -51,6 +51,8 @@ public class Controller : MonoBehaviour
     public float spcd;
     public float tripcd;
     public int tripCounter;
+    [SerializeField] SpriteRenderer tripCounterSprite;
+    [SerializeField] Sprite[] tripCounterSpriteSprites;
     public bool actionable;
     public bool starting;
     public float hitstun;
@@ -122,7 +124,8 @@ public class Controller : MonoBehaviour
             buffered = false;
         }
         footstool = inputJump && foot.IsTouchingLayers(fslm);
-        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0;
+        slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0 
+            && !(Mathf.Abs(trans.position.x - other.trans.position.x) > .5);
 
         if (hit || hitstun > 0f) {
             bladeCollider.enabled = false;
@@ -133,7 +136,8 @@ public class Controller : MonoBehaviour
         }
 
         if (hitbox.IsTouchingLayers(hurt) && !other.hit && other.currentAttack.name != "Block"
-                && !(block && other.currentAttack.name != "Trip Attack" && other.currentAttack.name != "Weak Trip Attack")) {
+                && !(block && other.currentAttack.name != "Trip Attack" 
+                && other.currentAttack.name != "Weak Trip Attack")) {
             other.currentAttack.hit(this);
             other.hit = true;
             actionable = false;
@@ -143,7 +147,8 @@ public class Controller : MonoBehaviour
                 && other.currentAttack.name != "Block") {
             ui.addVal(2 + playerNumber, -50);
             if (ui.getVal(2 + playerNumber) <= 0) {
-                ui.setVal(2 + playerNumber, -25);
+                ui.setVal(2 + playerNumber, -50);
+                audioManager.play("NoBlock");
             }
             ui.addVal(4 + playerNumber, other.currentAttack.damage * 3);
             currentAttack.hit(other);
@@ -151,6 +156,16 @@ public class Controller : MonoBehaviour
 
         if (tripcd > 0f) {
             tripcd -= Time.deltaTime;
+            tripCounterSprite.enabled = true;
+            if (tripCounter < 4)
+            {
+                tripCounterSprite.sprite = tripCounterSpriteSprites[tripCounter];
+            } else {
+                tripCounterSprite.sprite = tripCounterSpriteSprites[3];
+                tripCounter = 0;
+            }
+        } else {
+            tripCounterSprite.enabled = false;
         }
 
         if (other.trans.position.x > trans.position.x) {
@@ -160,7 +175,8 @@ public class Controller : MonoBehaviour
         }
 
         footstoolHitbox.enabled = true;
-        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) || (!starter.firstTime && starter.timer > 1.5f)) {
+        if (hitstun > 0.0f || !(anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) 
+                || (!starter.firstTime && starter.timer > 1.5f)) {
             actionable = false;
             if (inputAttack) {
                 buffered = true;

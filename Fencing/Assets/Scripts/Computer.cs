@@ -140,8 +140,20 @@ public class Computer : MonoBehaviour
                 inputAttack = true;
                 inputDown = Random.Range(0f, 1f) < .5f;
                 inputForward = Random.Range(0f, 3f) < 1f;
-            } else if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 4f) {
-                
+            } else if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 3f) {
+                if (player.jAttackWindow > 0f)
+                {
+                    inputAttack = Random.Range(0f, 1f) < .2f && !player.other.block;
+                    if (inputAttack)
+                    {
+                        inputForward = true;
+                    }
+                }
+                inputAttack = Random.Range(0f, 1f) < .1f && !player.other.block;
+                if (inputAttack)
+                {
+                    inputForward = true;
+                }
             }
         } else {
             actionTimer -= Time.deltaTime;
@@ -178,6 +190,11 @@ public class Computer : MonoBehaviour
                 if (player.other.block && Random.Range(0f, 3f) < 2f) {
                     inputDown = true;
                 }
+                if (player.tripCounter > 1 && Random.Range(0f, 1f) < .2f)
+                {
+                    inputDown = false;
+                }
+                inputForward = Random.Range(0f, 1f) < .2f;
                 if (Random.Range(0f, 4f) < 1f) {
                     ResetInputs();
                     inputJump = true;

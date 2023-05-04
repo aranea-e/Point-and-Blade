@@ -65,8 +65,11 @@ public class Attack
     public void attack(Controller attacker) {
         attacker.anim.SetTrigger(trigger);
         attacker.currentAttack = this;
-        if (attacker.tripcd > 0.0f && attacker.tripcd < stun) {
+        if (attacker.tripcd > 0.0f && attacker.tripcd < stun && attacker.tripcd > 0f) {
             attacker.tripcd = stun + .2f;
+        }
+        if (attacker.tripcd < 1f && attacker.tripcd > 0f) {
+            attacker.tripcd = 1f;
         }
     }
 }
