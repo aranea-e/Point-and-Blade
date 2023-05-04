@@ -13,7 +13,7 @@ public class Controller : MonoBehaviour
     public AudioManager audioManager;
     Computer computerController;
     
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     public Transform trans;
     public Animator anim;
     [SerializeField] BoxCollider2D bladeCollider;
@@ -238,6 +238,10 @@ public class Controller : MonoBehaviour
                         fscd = 2.0f;
                         tripCounter = 0;
                     }
+                    Vector3 final = new Vector3(0, rb.velocity.y, 0);
+                    if (inputLeft) { final.x -= moveMod; }
+                    if (inputRight) { final.x += moveMod; }
+                    rb.velocity = final;
                 } else if ((inputRight && trans.localScale.x == 1) || (inputLeft && trans.localScale.x == -1)) {
                     Attacks[1].attack(this);
                     rb.velocity = new Vector3(moveMod * trans.localScale.x, rb.velocity.y, 0);

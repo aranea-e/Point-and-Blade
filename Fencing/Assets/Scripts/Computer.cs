@@ -98,7 +98,8 @@ public class Computer : MonoBehaviour
         }
         inputForward = moveForward && move;
         inputBackward = !moveForward && move;
-        inputJump = Random.Range(0f, 1f) < 0.01f;
+        inputJump = Random.Range(0f, 1f) < 0.0025f 
+                        && Vector3.Distance(player.trans.position, player.other.trans.position) > 1.5f;
 
         if (player.other.anim.GetCurrentAnimatorStateInfo(0).IsName("Lunging Strike") && Vector3.Distance(player.trans.position, player.other.trans.position) <= 6f)
         {
@@ -136,8 +137,14 @@ public class Computer : MonoBehaviour
                 defend = Random.Range(0f, 1f) > .67f;
                 defendTimer = Random.Range(.2f, .5f);
             }
-            if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 2f && !defend) {
-                inputAttack = true;
+            if (Vector3.Distance(player.trans.position, player.other.trans.position) <= .75f && !defend) {
+                inputAttack = Random.Range(0f, 1f) > .67f;
+                if (!player.IsGrounded()) {
+                    inputAttack = Random.Range(0f, 1f) > .05f;
+                }
+                if (player.trans.position.y > .5f || player.rb.velocity.y > 0f || player.other.block) {
+                    inputAttack = Random.Range(0f, 1f) > .05f;
+                }
                 inputDown = Random.Range(0f, 1f) < .5f;
                 inputForward = Random.Range(0f, 3f) < 1f;
             } else if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 3f) {
@@ -148,11 +155,22 @@ public class Computer : MonoBehaviour
                     {
                         inputForward = true;
                     }
+                    if (inputAttack && player.tripCounter < 4)
+                    {
+                        inputDown = Random.Range(0f, 5 - player.tripCounter) > 1.5f;
+                    }
                 }
                 inputAttack = Random.Range(0f, 1f) < .1f && !player.other.block;
                 if (inputAttack)
                 {
                     inputForward = true;
+                }
+                if (Random.Range(0f, 5 - player.tripCounter) > 1.75f
+                        && Random.Range(0f, 1) > .25f)
+                {
+                    inputAttack = true;
+                    inputForward = true;
+                    inputDown = true;
                 }
             }
         } else {
@@ -161,6 +179,10 @@ public class Computer : MonoBehaviour
         if (defend) {
             inputBlock = true;
             inputJump = Random.Range(0f, 1f) > .33f;
+        }
+        if (!player.IsGrounded() && Vector3.Distance(player.trans.position, player.other.trans.position) <= 1f) {
+            ResetInputs();
+            inputBackward = true;
         }
     }
 
@@ -186,11 +208,14 @@ public class Computer : MonoBehaviour
         if (actionTimer <= 0.0f) {
             if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 2f) {
                 inputAttack = true;
-                inputDown = Random.Range(0f, 1f) < .5f;
-                if (player.other.block && Random.Range(0f, 3f) < 2f) {
+                if (player.tripCounter < 3)
+                {
+                    inputDown = Random.Range(0f, 5 - player.tripCounter) > 1f;
+                }
+                if (player.other.block && Random.Range(0f, 3f) < 2f && player.tripCounter < 3) {
                     inputDown = true;
                 }
-                if (player.tripCounter > 1 && Random.Range(0f, 1f) < .2f)
+                if (player.tripCounter > 1 && Random.Range(0f, 1f) < .3f)
                 {
                     inputDown = false;
                 }
@@ -220,6 +245,18 @@ public class Computer : MonoBehaviour
                     stateTimer = 0.0f;
                     state = 0;
                 } 
+                if (player.other.block)
+                {
+                    ResetInputs();
+                    if (Vector3.Distance(player.trans.position, player.other.trans.position) <= 2f
+                            && Random.Range(0f, 5 - player.tripCounter) > 1.75f
+                            && Random.Range(0f, 1) > .25f)
+                    {
+                        inputAttack = true;
+                        inputForward = true;
+                        inputDown = true;
+                    }
+                }
             }
             if (player.ui.getVal(5) == 100 && player.ui.getVal(1) < 25)
             {
@@ -258,7 +295,7 @@ public class Computer : MonoBehaviour
             inputJump = true;
         }
 
-        if (!inputBlock) {
+        if (!inputBlock && Vector3.Distance(player.trans.position, player.other.trans.position) <= 2f) {
             inputAttack = Random.Range(0f, 1f) < .75f;
         }
         if (inputAttack) {
@@ -306,13 +343,8 @@ public class Computer : MonoBehaviour
     void footstoolAttempt() {
         if (!player.IsGrounded())
         {
-            if (player.jHeld)
-            {
-                inputJump = false;
-            } else
-            {
-                inputJump = true;
-            }
+            player.jHeld = false;
+            inputJump = true;
         }
     }
 }
