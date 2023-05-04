@@ -125,8 +125,7 @@ public class Controller : MonoBehaviour
         }
         footstool = inputJump && foot.IsTouchingLayers(fslm);
         slip = foot.IsTouchingLayers(splm) && rb.velocity.y < 0 
-            && !(Mathf.Abs(trans.position.x - other.trans.position.x) > .5);
-
+            && !(Mathf.Abs(trans.position.x - other.trans.position.x) > .51);
         if (hit || hitstun > 0f) {
             bladeCollider.enabled = false;
         }
