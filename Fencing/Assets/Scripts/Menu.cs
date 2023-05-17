@@ -98,24 +98,28 @@ public class Menu : MonoBehaviour
         selectedButton = i;
     }
 
-    public void startGame() {
-        DontDestroyOnLoad(Instantiate(controlPrefab, new Vector3(0, 0, 0), Quaternion.identity));
-        controlObject = FindObjectOfType<Controls>();
-        controlObject.controls = controls;
-        controlObject.P1controller = controllerSelection[0].isOn;
-        controlObject.P2controller = controllerSelection[1].isOn;
-        PlayerControlManager[] tempArr = FindObjectsOfType<PlayerControlManager>();
-        if (tempArr.Length > 0 && tempArr[0].playerNumber == 1)
+    public void startGame(int index) {
+        if (index == 1)
         {
-            PlayerControlManager temp = tempArr[0];
-            tempArr[0] = tempArr[1];
-            tempArr[1] = temp;
+            DontDestroyOnLoad(Instantiate(controlPrefab, new Vector3(0, 0, 0), Quaternion.identity));
+            controlObject = FindObjectOfType<Controls>();
+            controlObject.controls = controls;
+            controlObject.P1controller = controllerSelection[0].isOn;
+            controlObject.P2controller = controllerSelection[1].isOn;
+            PlayerControlManager[] tempArr = FindObjectsOfType<PlayerControlManager>();
+            if (tempArr.Length > 0 && tempArr[0].playerNumber == 1)
+            {
+                PlayerControlManager temp = tempArr[0];
+                tempArr[0] = tempArr[1];
+                tempArr[1] = temp;
+            }
+            if (tempArr.Length > 0) { tempArr[0].setStickJump(controllerSelection[2].isOn); }
+            if (tempArr.Length > 1) { tempArr[1].setStickJump(controllerSelection[3].isOn); }
+            controlObject.playerControlManagers = tempArr;
+            controlObject.com = computer.isOn;
         }
-        if (tempArr.Length > 0) { tempArr[0].setStickJump(controllerSelection[2].isOn); }
-        if (tempArr.Length > 1) { tempArr[1].setStickJump(controllerSelection[3].isOn); }
-        controlObject.playerControlManagers = tempArr;
-        controlObject.com = computer.isOn;
-        SceneManager.LoadScene(1);
+        
+        SceneManager.LoadScene(index);
     }
 
     public void quit() {

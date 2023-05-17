@@ -21,11 +21,18 @@ public class Starter : MonoBehaviour
 
     [SerializeField] int[] scores;
 
+    public bool tutorial;
+
     void Start()
     {
-        timer = 3.0f;
-        firstTime = true;
-        FindObjectOfType<AudioManager>().play("Starter");
+        if (!tutorial) {
+            timer = 3.0f;
+            firstTime = true;
+            FindObjectOfType<AudioManager>().play("Starter");
+        } else {
+            timer = 0.0f;
+        }
+        
     }
 
     public void reStart(int winner) {
@@ -34,8 +41,9 @@ public class Starter : MonoBehaviour
         firstTime = false;
         P1txt.text = scores[0].ToString();
         P2txt.text = scores[1].ToString();
-        ui.Start();
         FindObjectOfType<AudioManager>().play("Starter");
+            
+        ui.Start();
     }
     
     void Update()

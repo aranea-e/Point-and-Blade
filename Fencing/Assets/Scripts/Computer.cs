@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Computer : MonoBehaviour
-{
+public class Computer : MonoBehaviour {
     public Controller player;
     Controls controls;
     
@@ -41,20 +40,17 @@ public class Computer : MonoBehaviour
     public void computerUpdate() {
         ResetInputs();
         DetermineState();
-        if (state == 0)
-        {
+        if (state == 0) {
             Neutral();
         }
-        if (state == 1)
-        {
+        if (state == 1) {
             Advantage();
         }
-        if (state == -1)
-        {
+        if (state == -1) {
             Disadvantage();
         }
         ForwardBackLeftRight();
-        footstoolAttempt();
+        footstoolAttempt();      
     }
 
     void ResetInputs() {

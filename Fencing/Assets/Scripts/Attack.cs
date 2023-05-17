@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Attack
-{
+public class Attack {
     [SerializeField] public string name;
 
     [SerializeField] string trigger;
@@ -15,8 +14,7 @@ public class Attack
 
     public void hit(Controller reciever) {
         reciever.applyHitstun(stun);
-        if (name == "Weak Trip Attack")
-        {
+        if (name == "Weak Trip Attack") {
             reciever.applyHitstun(stun / reciever.other.tripCounter);
             if (stun / reciever.other.tripCounter < 1 / 16.0)
             {
@@ -25,8 +23,7 @@ public class Attack
         }
         reciever.applyKnockback(knockback);
         reciever.spcd = 3.0f;
-        if (reciever.playerNumber == 0)
-        {
+        if (reciever.playerNumber == 0) {
             if (reciever.ui.getVal(0) - damage <= 0) {
                 reciever.audioManager.play("Kill");
             } else {
@@ -54,10 +51,9 @@ public class Attack
         reciever.anim.SetBool("Blocking", false);
         reciever.block = false;
 
-        if (reciever.playerNumber == 0)
-        {
+        if (reciever.playerNumber == 0 && reciever.ui.getVal(0) != 100f) {
             reciever.ui.addVal(5, damage * 2);
-        } else {
+        } else if (reciever.ui.getVal(1) != 100f) {
             reciever.ui.addVal(4, damage * 2);
         }
     }

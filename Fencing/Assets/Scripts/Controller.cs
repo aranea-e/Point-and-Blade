@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Controller : MonoBehaviour
-{
+public class Controller : MonoBehaviour {
     public Controller other;
     public UI ui;
     public int playerNumber;
@@ -17,7 +16,7 @@ public class Controller : MonoBehaviour
     public Transform trans;
     public Animator anim;
     [SerializeField] BoxCollider2D bladeCollider;
-    [SerializeField] BoxCollider2D playerCollider;
+    public BoxCollider2D playerCollider;
     [SerializeField] BoxCollider2D foot;
     [SerializeField] BoxCollider2D hitbox;
     [SerializeField] BoxCollider2D footstoolHitbox;
@@ -56,7 +55,7 @@ public class Controller : MonoBehaviour
     public bool actionable;
     public bool starting;
     public float hitstun;
-    [SerializeField] float moveMod;
+    public float moveMod;
     [SerializeField] float jumpMod;
     [SerializeField] LayerMask fslm;
     [SerializeField] LayerMask splm;
@@ -88,7 +87,6 @@ public class Controller : MonoBehaviour
             Destroy(controls.gameObject);
             SceneManager.LoadScene(0);
         }
-
         if (playerNumber == 1 && controls.com)
         {
             computerController.computerUpdate();
@@ -138,7 +136,8 @@ public class Controller : MonoBehaviour
             hit = false;
         }
 
-        if (hitbox.IsTouchingLayers(hurt) && !other.hit && other.currentAttack.name != "Block"
+        if (hitbox.IsTouchingLayers(hurt) && !other.hit && other.bladeCollider.enabled
+                && other.currentAttack.name != "Block"
                 && !(block && other.currentAttack.name != "Trip Attack" 
                 && other.currentAttack.name != "Weak Trip Attack")) {
             other.currentAttack.hit(this);
@@ -193,13 +192,6 @@ public class Controller : MonoBehaviour
             }
         } 
         
-        if (ui.getVal(4 + playerNumber) == 100 && inputBlock && hitstun <= 0.0f) {
-            ui.setVal(4 + playerNumber, 0);
-            ui.addVal(playerNumber, 33);
-            ui.setVal(2 + playerNumber, 100);
-            audioManager.play("Adren");
-        }
-
         if (inputBlock && hitstun <= 0.0f && ui.getVal(2 + playerNumber) > 0 
                 && (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") 
                 || anim.GetCurrentAnimatorStateInfo(0).IsName("Block")))
@@ -218,6 +210,13 @@ public class Controller : MonoBehaviour
             anim.SetBool("Blocking", false);
             block = false;
             ui.addVal(2 + playerNumber, Time.deltaTime * 10f);
+        }
+
+        if (ui.getVal(4 + playerNumber) == 100 && block && hitstun <= 0.0f) {
+            ui.setVal(4 + playerNumber, 0);
+            ui.addVal(playerNumber, 33);
+            ui.setVal(2 + playerNumber, 100);
+            audioManager.play("Adren");
         }
 
         if (actionable && inputAttack) {
